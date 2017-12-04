@@ -8,7 +8,11 @@ var database = require('../controllers/database')();
 var router = function () {
     transRouter.route('/checkTransaction')
         .post(function (req, res) {
-            var card = req.body.card;
+            console.log("Check transaction body:", req.body);
+            var card = {
+                number: req.body.card_number,
+                cvc: req.body.cvc
+            }
             //var vendor = 
 
             database.checkValidCard(card, function (result) {

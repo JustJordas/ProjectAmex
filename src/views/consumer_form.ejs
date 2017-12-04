@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>American Express Consumer Validation</title>
+    <link rel='stylesheet' href='form.css' type='text/css' />
+    <script>
+        function formValidation(event) {
+            var form_error = false;
+            event.preventDefault();
+            var cardno = document.getElementById("card_number").value;
+            var expirymonth = document.getElementById("card_number").value;
+            var expiryyear = document.getElementById("card_number").value;
+            var cvc = document.getElementById("card_number").value;
+
+            document.getElementById("card_number_error").innerHTML = "";
+            document.getElementById("expiry_month_error").innerHTML = "";
+            document.getElementById("expiry_year_error").innerHTML = "";
+            document.getElementById("cvc_error").innerHTML = "";
+
+            if (!cardno.match(/^[0-9]+$/)) {
+                document.getElementById("card_number_error").innerHTML = "Please enter only numbers.";
+                form_error = true;
+            }
+            if (cardno.length < 15) {
+                document.getElementById("card_number_error").innerHTML = "The card number should only be 15 numbers long.";
+                form_error = true;
+            }
+            if (expirymonth != "12" && expiryyear == "17") {
+                document.getElementById("expiry_month_error").innerHTML = "Please enter a valid expiry date.";
+                form_error = true;
+            }
+            if (expirymonth == "") {
+                document.getElementById("expiry_month_error").innerHTML = "Please enter the expiry month.";
+                form_error = true;
+            }
+            if (expiryyear == "") {
+                document.getElementById("expiry_year_error").innerHTML = "Please enter the expiry year.";
+                form_error = true;
+            }
+            if (!cvc.match(/^[0-9]+$/)) {
+                document.getElementById("cvc_error").innerHTML = "Please enter only numbers.";
+                form_error = true;
+            }
+            if (cvc.length < 4) {
+                document.getElementById("cvc_error").innerHTML = "The card number should only be 4 numbers long.";
+                form_error = true;
+            }
+
+            if (form_error == false) {
+                console.log('pass');
+
+                document.getElementById("consumer_form").submit();
+            }
+        }
+
+    </script>
+</head>
+
+<body>
+
+    <h1>American Express Consumer Form</h1>
+
+    <form id='consumer_form' name='consumer_form' onSubmit="formValidation(event);" action="/transaction/checkTransaction" method="post">
+
+        <label for="card_number">Card Number:</label>
+        <input name="card_number" size="12" placeholder="Card Number" id="card_number" maxlength="15" type="text" />
+        <font color="red"></font>
+        <p id="card_number_error"></p>
+
+
+        Expiry Date:
+        <select name='expiry_month' id='expiry_month'>
+<option value=''>Month</option>
+<option value='01'>January</option>
+<option value='02'>February</option>
+<option value='03'>March</option>
+<option value='04'>April</option>
+<option value='05'>May</option>
+<option value='06'>June</option>
+<option value='07'>July</option>
+<option value='08'>August</option>
+<option value='09'>September</option>
+<option value='10'>October</option>
+<option value='11'>November</option>
+<option value='12'>December</option>
+</select>
+
+
+
+        <select name='expiry_year' id='expiry_year'>
+    <option value=''>Year</option>
+    <option value='17'>2017</option>
+    <option value='18'>2018</option>
+    <option value='19'>2019</option>
+    <option value='20'>2020</option>
+    <option value='21'>2021</option>
+    <option value='22'>2022</option>
+    <option value='23'>2023</option>
+    <option value='24'>2024</option>
+    <option value='25'>2025</option>
+</select>
+
+        <font color="red"></font>
+        <p id="expiry_month_error"></p>
+        </font>
+        <font color="red"></font>
+        <p id="expiry_year_error"></p>
+        </font>
+
+
+        <label for="cvc">CVC:</label>
+        <input type="text" name="cvc" size="12" placeholder="CVC" id="cvc" maxlength="4" type="text" />
+
+        <font color="red"></font>
+        <p id="cvc_error"></p>
+        </font>
+
+        <input type="submit" form="consumer_form" value="submit">
+
+    </form>
+
+</body>
+
+</html>

@@ -16,7 +16,11 @@ app.use(session({
     activeDuration: 5 * 60 * 1000
 }));
 
-//require('./src/config/passport')(app);
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
+
+app.use(bodyParser.json());
 
 app.set('views', './src/views');
 app.set('view engine', 'ejs');

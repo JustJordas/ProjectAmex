@@ -28,7 +28,7 @@ app.use('/transaction', transRouter);
 app.use('/general', generalRouter);
 
 app.get('/', function (req, res) {
-    res.render('index');
+    res.render('consumer_form');
 });
 
 app.listen(port, function (err) {

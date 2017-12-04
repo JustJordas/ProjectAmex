@@ -16,9 +16,15 @@ var router = function () {
             //var vendor = 
 
             database.checkValidCard(card, function (result) {
+                console.log('Card:', result);
+
                 if (result.valid == true) {
-                    if (result.balance > transaction.money2spend && result.expiryDate > Date().getTime()) {
-                        transaction.consumer = card.number;
+                    if (result.balance > transaction.money2spend && result.expiryDate > Date().getTime()) {#
+                        var transaction = {
+                            consumer: result.number,
+                            vendor: null,
+                            amount: 100
+                        }
 
                         db.addTransaction(transaction, function (returnedTransaction) {
                             if (returnedTransaction.valid == true) {
@@ -38,6 +44,8 @@ var router = function () {
 
                                     console.log('Returned consumer:', returnedConsumerUpdate);
                                 });
+                            } else {
+                                console.log('Invalid transaction');
                             }
                         });
                     } else {

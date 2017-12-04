@@ -3,7 +3,8 @@ var objectId = require('mongodb').ObjectID;
 var crypto = require('crypto');
 const key = 'americanexpress';
 
-var url = 'mongodb://test:pass@ds129183.mlab.com:29183/middleman'; //do change this
+var url = 'mongodb://test:pass@ds129386.mlab.com:29386/amex_test'; //do change this
+
 
 var database = function () {
     var issueNewCard = function (card, callback) {
@@ -12,11 +13,13 @@ var database = function () {
 
             card.number = crypto.createHmac('sha256', key).update(card.number).digest('hex');
             card.cvc = crypto.createHmac('sha256', key).update(card.cvc).digest('hex');
-            card.expiryDate = Date.getTime(); //current UNIX time.
+            var d = new Date();
+            card.expiryDate = d.getTime(); //current UNIX time.
 
             //TODO check for duplicates..and if not, move on
-            collection.insert(card, function (result) {
-                if (result.nInserted > 0) {
+            collection.insert(card, function (err, result) {
+                console.log(result);
+                if (!err) {
                     //it s alright
                     return callback(true);
                 } else {
@@ -41,14 +44,43 @@ var database = function () {
                 if (result.length == 1) {
                     card = result[0];
                     card.valid = true;
-                    //return callback(card);
-                } else {
-                    //return callback(card);
                 }
 
                 return callback(card);
             })
         });
+    }
+
+    var addTransaction = function (transaction, callback) {
+        mongodb.connect(url, function (err, db) {
+            var collection = db.collection('transactions');
+
+            transaction.consumer = crypto.createHmac('sha256', key).update(transaction.consumer).digest('hex');
+            transaction.vendor = crypto.createHmac('sha256', key).update(transaction.vendor).digest('hex');
+
+            collection.insert(transaction, function (err, result) {
+                console.log(result);
+                if (!err) {
+                    //it s alright
+                    return callback(true);
+                } else {
+                    return callback(false);
+                }
+            })
+        })
+    }
+
+    var updateBalanceConsumer = function (filter, callback) {
+        mongodb.connect(url, function (err, db) {
+                var collection = db.collection('consumer');
+
+                collection.find(filter).toArray(function (err, result) {
+                    if (result.length == 1) {
+                        //collection
+                    }
+                })
+            }
+        }
     }
 
 

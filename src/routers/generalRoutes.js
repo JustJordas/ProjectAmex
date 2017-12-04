@@ -17,6 +17,21 @@ var router = function () {
             }
         })
 
+    generalRouter.route('/createAcc')
+        .get(function (req, res) {
+            res.render('createCard');
+        })
+        .post(function (req, res) {
+            var card = {
+                number: req.body.card_number,
+                cvc: req.body.cvc
+            }
+
+            database.issueNewCard(card, function (result) {
+                console.log("Create new acc:", result);
+            })
+        })
+
     return generalRouter;
 };
 

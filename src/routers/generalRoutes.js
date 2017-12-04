@@ -1,10 +1,9 @@
 var express = require('express');
-var authRouter = express.Router();
+var generalRouter = express.Router();
 var mongodb = require('mongodb').MongoClient;
 var objectId = require('mongodb').ObjectID;
 
-//var database = require('../controllers/database')();
-
+var database = require('../controllers/database')();
 
 var router = function () {
     generalRouter.route('/pay')

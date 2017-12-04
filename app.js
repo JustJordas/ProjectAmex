@@ -4,15 +4,10 @@ const cookieParser = require('cookie-parser');
 const session = require('client-sessions');
 
 const transRouter = require('./src/routers/transRoutes')();
+const generalRouter = require('./src/routers/generalRoutes')();
 var app = express();
 
 var port = 8000;
-
-app.use(express.static('public'));
-//app.use(express.static('assets'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded());
-app.use(cookieParser());
 
 app.use(session({
     cookieName: 'session',
@@ -26,6 +21,7 @@ app.use(session({
 app.set('views', './src/views');
 app.set('view engine', 'ejs');
 app.use('/transaction', transRouter);
+app.use('/general', generalRouter);
 
 app.get('/', function (req, res) {
     res.render('index');

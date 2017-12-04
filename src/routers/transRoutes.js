@@ -1,12 +1,12 @@
 var express = require('express');
-var authRouter = express.Router();
+var transRouter = express.Router();
 var mongodb = require('mongodb').MongoClient;
 var objectId = require('mongodb').ObjectID;
 
-//var database = require('../controllers/database')();
+var database = require('../controllers/database')();
 
 var router = function () {
-    authRouter.route('/checkTransaction')
+    transRouter.route('/checkTransaction')
         .post(function (req, res) {
             var card = req.body.card;
             //var vendor = 
@@ -24,7 +24,6 @@ var router = function () {
                                     db.updateBalanceVendor(vendor.number, money, function (returnedVendorUpdate) {
                                         db.updateBalanceBank(money, function (returnedBankUpdate) {
                                             //TODO think of it..Change it
-
                                             res.redirect('/trans/succes');
 
                                             connsole.log('Returned bank:', returnedBankUpdate);
@@ -38,11 +37,12 @@ var router = function () {
                             }
                         });
                     } else {
-
+                        console.log('Balance or expiry date invalid');
                     }
                     //Check balance and etc etc
                 } else {
                     //close stuff
+                    console.log('Invalid card');
                 }
             })
         });

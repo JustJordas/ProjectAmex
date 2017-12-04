@@ -3,9 +3,7 @@ var objectId = require('mongodb').ObjectID;
 var crypto = require('crypto');
 const key = 'americanexpress';
 
-//password = crypto.createHmac('sha256', key).update(password).digest('hex');
-
-var url = 'mongodb://test:pass@ds129183.mlab.com:29183/middleman';
+var url = 'mongodb://test:pass@ds129183.mlab.com:29183/middleman'; //do change this
 
 var database = function () {
     var issueNewCard = function (card, callback) {
@@ -14,17 +12,17 @@ var database = function () {
 
             card.number = crypto.createHmac('sha256', key).update(card.number).digest('hex');
             card.cvc = crypto.createHmac('sha256', key).update(card.cvc).digest('hex');
-            card.expiryDate = Date.getTime();
+            card.expiryDate = Date.getTime(); //current UNIX time.
 
             //TODO check for duplicates..and if not, move on
-            collection.insert(card, result) {
+            collection.insert(card, function (result) {
                 if (result.nInserted > 0) {
                     //it s alright
-                    return callback(true)
+                    return callback(true);
                 } else {
                     return callback(false);
                 }
-            }
+            })
         });
     }
 
@@ -35,7 +33,7 @@ var database = function () {
             card.number = crypto.createHmac('sha256', key).update(card.number).digest('hex');
             card.cvc = crypto.createHmac('sha256', key).update(card.cvc).digest('hex');
 
-            collection.find(card).toArray(function (err, result)) {
+            collection.find(card).toArray(function (err, result) {
                 var card = {
                     valid: false
                 }
@@ -43,18 +41,20 @@ var database = function () {
                 if (result.length == 1) {
                     card = result[0];
                     card.valid = true;
-                    return callback(card);
+                    //return callback(card);
                 } else {
-                    return callback(card);
+                    //return callback(card);
                 }
-            }
+
+                return callback(card);
+            })
         });
     }
 
 
     return {
         checkValidCard: checkValidCard,
-
+        issueNewCard: issueNewCard
     }
 }
 

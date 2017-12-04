@@ -3,7 +3,7 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const session = require('client-sessions');
 
-const authRouter = require('./src/routers/transRoutes')();
+const transRouter = require('./src/routers/transRoutes')();
 var app = express();
 
 var port = 8000;

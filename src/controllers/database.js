@@ -14,6 +14,7 @@ var database = function () {
 
             card.number = crypto.createHmac('sha256', key).update(card.number).digest('hex');
             card.cvc = crypto.createHmac('sha256', key).update(card.cvc).digest('hex');
+            card.expiryDate = Date.getTime();
 
             //TODO check for duplicates..and if not, move on
             collection.insert(card, result) {
@@ -34,7 +35,6 @@ var database = function () {
             card.number = crypto.createHmac('sha256', key).update(card.number).digest('hex');
             card.cvc = crypto.createHmac('sha256', key).update(card.cvc).digest('hex');
 
-            //TODO check for duplicates..and if not, move on
             collection.find(card).toArray(function (err, result)) {
                 var card = {
                     valid: false

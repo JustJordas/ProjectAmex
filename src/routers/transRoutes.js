@@ -6,28 +6,14 @@ var objectId = require('mongodb').ObjectID;
 //var database = require('../controllers/database')();
 
 var router = function () {
-    authRouter.route('/test')
-        .get(function (req, res) {
-            res.render("test2");
-            console.log("From /test:", req.user);
-        });
-
     authRouter.route('/checkTransaction')
         .post(function (req, res) {
-            /*TODO check stuff..if we need to keep track of the card session
-                query DB 
-                
-                if(user) {
-                    req.session.card = req.body.card;
-                }
-            */
-
             var card = req.body.card;
             //var vendor = 
 
             database.checkValidCard(card, function (result) {
                 if (result.valid == true) {
-                    if (result.balance > transaction.money2spend) {
+                    if (result.balance > transaction.money2spend && result.expiryDate > Date().getTime()) {
                         transaction.consumer = card.number;
 
                         db.addTransaction(transaction, function (returnedTransaction) {
@@ -38,8 +24,16 @@ var router = function () {
                                     db.updateBalanceVendor(vendor.number, money, function (returnedVendorUpdate) {
                                         db.updateBalanceBank(money, function (returnedBankUpdate) {
                                             //TODO think of it..Change it
+
+                                            res.redirect('/trans/succes');
+
+                                            connsole.log('Returned bank:', returnedBankUpdate);
                                         });
+
+                                        console.log('Returned vendor:', returnedConsumerUpdate);
                                     });
+
+                                    console.log('Returned consumer:', returnedConsumerUpdate);
                                 });
                             }
                         });
@@ -51,23 +45,14 @@ var router = function () {
                     //close stuff
                 }
             })
+        });
+
+    transRouter.route('/succes')
+        .get(function (req, res) {
+            res.render('succes')
         })
 
-
-    /*
-        authRouter.route('/tryRandomLogin')
-            .get(function (req, res) {
-                req.user = {
-                    name: "Me",
-                    secondName: "Mario"
-                }
-
-                console.log(req.user);
-
-                res.render("test2");
-            });
-    */
-    return authRouter;
+    return transRouter;
 };
 
 module.exports = router;

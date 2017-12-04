@@ -1,10 +1,9 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
-const passport = require('passport');
-const session = require('express-session');
+const session = require('client-sessions');
 
-const authRouter = require('./src/routers/authRoutes')();
+const authRouter = require('./src/routers/transRoutes')();
 var app = express();
 
 var port = 8000;
@@ -14,15 +13,19 @@ app.use(express.static('public'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
 app.use(cookieParser());
+
 app.use(session({
-    secret: 'Amex'
+    cookieName: 'session',
+    secret: 'AmericanExpress',
+    duration: 30 * 60 * 1000,
+    activeDuration: 5 * 60 * 1000
 }));
 
 //require('./src/config/passport')(app);
 
 app.set('views', './src/views');
 app.set('view engine', 'ejs');
-app.use('/auth', authRouter);
+app.use('/transaction', transRouter);
 
 app.get('/', function (req, res) {
     res.render('index');
